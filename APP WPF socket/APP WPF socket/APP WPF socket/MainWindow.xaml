@@ -1,0 +1,25 @@
+﻿<Window x:Class="APP_WPF_socket.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:APP_WPF_socket"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="981.716">
+    <Grid Height="321" VerticalAlignment="Top" Margin="0,0,3.2,-0.2">
+        <TextBox Name="txtIP" HorizontalAlignment="Left" Height="38" Margin="96,60,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox Name="txtPort" HorizontalAlignment="Left" Height="38" Margin="309,60,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="134"/>
+        <Button Name="btnCreaSocket" Content="Crea socket" HorizontalAlignment="Left" Margin="554,60,0,0" VerticalAlignment="Top" Width="119" Height="38"  Click="btnCreaSocket_Click"/>
+        <Button Name="btnInvia" Content="Invia" HorizontalAlignment="Left" Margin="111,244,0,0" VerticalAlignment="Top" Width="105" Height="35" IsEnabled="False" Click="btnInvia_Click"/>
+        <TextBox Name="txtMessage" HorizontalAlignment="Left" Height="61" Margin="96,155,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="150"/>
+        <Label Name="lblRicevi"  HorizontalAlignment="Left" Margin="399,151,0,0" VerticalAlignment="Top" Height="157" Width="206"/>
+        <Label Content="indirizzo IP" HorizontalAlignment="Left" Margin="126,26,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
+        <Label Content="Porta" HorizontalAlignment="Left" Margin="359,26,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
+        <Label Content="TXT messaggio" HorizontalAlignment="Left" Margin="126,124,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblErrore" HorizontalAlignment="Left" Margin="532,35,0,0" VerticalAlignment="Top"/>
+        <Label Content="Messaggio ricevuto" HorizontalAlignment="Left" Margin="450,120,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="lstInviati"  HorizontalAlignment="Left" Margin="637,151,0,0" VerticalAlignment="Top" Height="157" Width="206"/>
+        <Label Content="Messaggi inviati" HorizontalAlignment="Left" Margin="688,120,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

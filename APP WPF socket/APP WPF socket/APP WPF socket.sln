@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APP WPF socket", "APP WPF socket\APP WPF socket.csproj", "{CCF38366-3E5A-452F-A65B-8FEDDB432E09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCF38366-3E5A-452F-A65B-8FEDDB432E09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCF38366-3E5A-452F-A65B-8FEDDB432E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCF38366-3E5A-452F-A65B-8FEDDB432E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCF38366-3E5A-452F-A65B-8FEDDB432E09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6ED50DDC-5822-438C-A3D7-6ADB4CE50775}
+	EndGlobalSection
+EndGlobal
