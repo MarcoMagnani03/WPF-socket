@@ -22,7 +22,7 @@
             <Image x:Name="imgCarta" Source="carta.png" Stretch="Uniform" Visibility="Hidden"/>
 
         </Button>
-        <Button Name="btnforbici"  Background="White" Margin="0,100,102.8,31.2" HorizontalAlignment="Right" Height="100" Width="70" Click="Button_Click" Visibility="Collapsed">
+        <Button Name="btnforbici"  Background="White" Margin="0,100,102.8,31.2" HorizontalAlignment="Right" Height="100" Width="70" Click="Button_Click" Visibility="Collapsed" >
             <Image x:Name="imgForbici" Source="forbici.png" Stretch="Uniform" Visibility="Hidden"/>
         </Button>
         <Label Name="lblFaiScelta" Content="Fai la tua scelta:" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="20" />

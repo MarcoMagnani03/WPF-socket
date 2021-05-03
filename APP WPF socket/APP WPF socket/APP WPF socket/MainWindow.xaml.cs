@@ -31,10 +31,13 @@ namespace APP_WPF_socket
         }
         private void btnCreaSocket_Click(object sender, RoutedEventArgs e)
         {
-
-            //creiamo il source socket prendendo l'indirizzo Ip del nostro pc e inserendo un porta libera 
-            IPEndPoint sourceSocket = new IPEndPoint(IPAddress.Parse("192.168.1.194"),56000);
-            //creiamo il destination socket. Insserendo i valori inseriti nelle rispettive textBox
+            //creiamo il source socket prendendo l'indirizzo Ip del nostro pc e inserendo un porta libera
+            IPEndPoint sourceSocket;
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                sourceSocket = socket.LocalEndPoint as IPEndPoint;
+            }
             string[] numeroIp = txtIP.Text.Split('.');
             btnGioca.IsEnabled = true;
             //controllo contenuto delle textBox
