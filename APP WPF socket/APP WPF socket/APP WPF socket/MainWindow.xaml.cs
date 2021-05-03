@@ -32,12 +32,14 @@ namespace APP_WPF_socket
         private void btnCreaSocket_Click(object sender, RoutedEventArgs e)
         {
             //creiamo il source socket prendendo l'indirizzo Ip del nostro pc e inserendo un porta libera
-            IPEndPoint sourceSocket;
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-            {
-                socket.Connect("8.8.8.8", 65530);
-                sourceSocket = socket.LocalEndPoint as IPEndPoint;
-            }
+            string localIP;             
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0)) 
+            {                 
+                socket.Connect("8.8.8.8", 65530);                
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;  
+                localIP = endPoint.Address.ToString();             
+            }             
+            IPEndPoint sourceSocket = new IPEndPoint(IPAddress.Parse(localIP), 56000);
             string[] numeroIp = txtIP.Text.Split('.');
             btnGioca.IsEnabled = true;
             //controllo contenuto delle textBox
@@ -158,6 +160,10 @@ namespace APP_WPF_socket
                         this.Dispatcher.BeginInvoke(new Action(() =>
                         {
                             lblVittoria.Content = tmp;
+                            lblVittoria.Visibility = Visibility.Visible;
+                            string ipAddress = txtIP.Text;
+                            int port = int.Parse(txtPort.Text);
+                            SocketSend(IPAddress.Parse(ipAddress), port, simbolo);
                         }));
                     }
                 }
@@ -222,6 +228,13 @@ namespace APP_WPF_socket
             string ipAddress = txtIP.Text;
             int port = int.Parse(txtPort.Text);
             SocketSend(IPAddress.Parse(ipAddress), port, simbolo);
+            btnConferma.Visibility = Visibility.Hidden;
+            lblFaiScelta.Visibility = Visibility.Hidden;
+            btnsasso.Visibility = Visibility.Hidden;
+            btnforbici.Visibility = Visibility.Hidden;
+            btncarta.Visibility = Visibility.Hidden;
+            lblVittoria.Content = "Attendi la giocata dell'avversario...";
+            lblVittoria.Visibility = Visibility.Visible;
         }
     }
 }
