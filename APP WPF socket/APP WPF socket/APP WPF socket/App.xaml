@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:APP_WPF_socket"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="Border">
+            <Setter Property="CornerRadius" Value="15">
+                
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

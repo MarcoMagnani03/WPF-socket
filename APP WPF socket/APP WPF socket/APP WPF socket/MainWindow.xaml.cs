@@ -25,6 +25,8 @@ namespace APP_WPF_socket
     public partial class MainWindow : Window
     {
         static private string simbolo;
+        static private string message;
+        static private string simboloConfermato;
         public MainWindow()
         {
             InitializeComponent();
@@ -97,8 +99,6 @@ namespace APP_WPF_socket
 
             Byte[] bytesRicevuti = new Byte[256];
 
-            string message;
-
             int contaCaratteri=0;
 
             //qunando sono qua dentro non blocco l'interfaccia. await va abbinato ad async
@@ -122,13 +122,13 @@ namespace APP_WPF_socket
                                 switch (simbolo)
                                 {
                                     case "sasso":
-                                       tmp = "Anche il tuo avversaro ha scelto sasso è un PAREGGIO";
+                                        tmp = "Anche il tuo avversaro ha scelto sasso è un PAREGGIO";
                                         break;
                                     case "carta":
-                                        tmp = "Il tuo avversario ha scelto sasso hai VINTO";
+                                        tmp = "Il tuo avversario ha scelto sasso mentre tu carta hai VINTO";
                                         break;
                                     case "forbici":
-                                        tmp = "Il tuo avversario ha scelto sasso hai PERSO";
+                                        tmp = "Il tuo avversario ha scelto sasso mentre tu forbici hai PERSO";
                                         break;
                                 }
                                 break;
@@ -136,13 +136,13 @@ namespace APP_WPF_socket
                                 switch (simbolo)
                                 {
                                     case "sasso":
-                                        tmp = "Il tuo avversario ha scelto carta hai PERSO";
+                                        tmp = "Il tuo avversario ha scelto carta mentre tu sasso hai PERSO";
                                         break;
                                     case "carta":
                                         tmp = "Anche il tuo avversaro ha scelto carta è un PAREGGIO";
                                         break;
                                     case "forbici":
-                                        tmp = "Il tuo avversario ha scelto carta hai VINTO";
+                                        tmp = "Il tuo avversario ha scelto carta mentre tu forbici hai VINTO";
                                         break;
                                 }
                                 break;
@@ -150,10 +150,10 @@ namespace APP_WPF_socket
                                 switch (simbolo)
                                 {
                                     case "sasso":
-                                        tmp = "Il tuo avversario ha scelto forbici hai VINTO";
+                                        tmp = "Il tuo avversario ha scelto forbici mentre tu sasso hai VINTO";
                                         break;
                                     case "carta":
-                                        tmp = "Il tuo avversario ha scelto forbici hai PERSO";
+                                        tmp = "Il tuo avversario ha scelto forbici mentre tu carta hai PERSO";
                                         break;
                                     case "forbici":
                                         tmp = "Anche il tuo avversaro ha scelto forbici è un PAREGGIO";
@@ -165,25 +165,104 @@ namespace APP_WPF_socket
                         {
                             lblVittoria.Content = tmp;
                             lblVittoria.Visibility = Visibility.Visible;
+                            if (tmp.Contains("PERSO"))
+                            {
+                                lblVittoria.Foreground = Brushes.Red;
+                            }
+                            if (tmp.Contains("VINTO"))
+                            {
+                                lblVittoria.Foreground = Brushes.Green;
+                            }
+                            if (tmp.Contains("PAREGGIO"))
+                            {
+                                lblVittoria.Foreground = Brushes.Blue;
+                            }
                         }));
                     }
                 }
             });
+            
         }
-        public void SocketSend(IPAddress dest,int destport,string message)
+        public void SocketSend(IPAddress dest,int destport,string messaggio)
         {
             //transformiamo il messaggio in byte
-            Byte[] byteInviati = Encoding.ASCII.GetBytes(message);
+            Byte[] byteInviati = Encoding.ASCII.GetBytes(messaggio);
             Socket s = new Socket(dest.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
+
+            string vittoria = "";
+            switch (message)
+            {
+                //QUI controllo quale dei due utenti ha vinto controllando le varie casistiche, lo devo controllare anche qui perchè altrimenti la vittoria me la da solamente da chi riceve il secondo turno.
+                case "sasso":
+                    switch (simbolo)
+                    {
+                        case "sasso":
+                            vittoria = "Anche il tuo avversaro ha scelto sasso è un PAREGGIO";
+                            break;
+                        case "carta":
+                            vittoria = "Il tuo avversario ha scelto sasso mentre tu carta hai VINTO";
+                            break;
+                        case "forbici":
+                            vittoria = "Il tuo avversario ha scelto sasso mentre tu forbici hai PERSO";
+                            break;
+                    }
+                    break;
+                case "carta":
+                    switch (simbolo)
+                    {
+                        case "sasso":
+                            vittoria = "Il tuo avversario ha scelto carta mentre tu sasso hai PERSO";
+                            break;
+                        case "carta":
+                            vittoria = "Anche il tuo avversaro ha scelto carta è un PAREGGIO";
+                            break;
+                        case "forbici":
+                            vittoria = "Il tuo avversario ha scelto carta mentre tu forbici hai VINTO";
+                            break;
+                    }
+                    break;
+                case "forbici":
+                    switch (simbolo)
+                    {
+                        case "sasso":
+                            vittoria = "Il tuo avversario ha scelto forbici mentre tu sasso hai VINTO";
+                            break;
+                        case "carta":
+                            vittoria = "Il tuo avversario ha scelto forbici mentre tu carta hai PERSO"; 
+                            break;
+                        case "forbici":
+                            vittoria = "Anche il tuo avversaro ha scelto forbici è un PAREGGIO";
+                            break;
+                    }
+                    break;
+            }
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                lblVittoria.Content = vittoria;
+                lblVittoria.Visibility = Visibility.Visible;
+                if (vittoria.Contains("PERSO"))
+                {
+                    lblVittoria.Foreground = Brushes.Red;
+                }
+                if (vittoria.Contains("VINTO"))
+                {
+                    lblVittoria.Foreground = Brushes.Green;
+                }
+                if (vittoria.Contains("PAREGGIO"))
+                {
+                    lblVittoria.Foreground = Brushes.Blue;
+                }
+            }));
 
             //Andiamo a creare il socket del destinatario
             IPEndPoint remote_endpoint=new IPEndPoint(dest,destport);
             s.SendTo(byteInviati, remote_endpoint);
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            simbolo = ((Button)sender).Name.Substring(3);
+            simboloConfermato = ((Button)sender).Name.Substring(3);
             switch (simbolo)
             {
                 case "sasso":
@@ -228,14 +307,15 @@ namespace APP_WPF_socket
         {
             string ipAddress = txtIP.Text;
             int port = int.Parse(txtPort.Text);
+            simbolo = simboloConfermato;
+            lblVittoria.Content = "Attendi la giocata dell'avversario...";
+            lblVittoria.Visibility = Visibility.Visible;
             SocketSend(IPAddress.Parse(ipAddress), port, simbolo);
             btnConferma.Visibility = Visibility.Hidden;
             lblFaiScelta.Visibility = Visibility.Hidden;
             btnsasso.Visibility = Visibility.Hidden;
             btnforbici.Visibility = Visibility.Hidden;
             btncarta.Visibility = Visibility.Hidden;
-            lblVittoria.Content = "Attendi la giocata dell'avversario...";
-            lblVittoria.Visibility = Visibility.Visible;
         }
     }
 }

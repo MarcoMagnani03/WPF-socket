@@ -5,15 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:APP_WPF_socket"
         mc:Ignorable="d"
-        Title="Morra cinese" Height="260.8" Width="623.339">
+        Title="Morra Cinese" Height="260.8" Width="623.339" ResizeMode="NoResize">
     <Grid Background="AliceBlue">
-        <TextBox Name="txtIP" HorizontalAlignment="Left" Height="38" Margin="34,56,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-        <TextBox Name="txtPort" HorizontalAlignment="Left" Height="38" Margin="247,56,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="134"/>
-        <Button Background="GreenYellow" Name="btnCreaSocket" Content="Crea socket" HorizontalAlignment="Left" Margin="470,56,0,0" VerticalAlignment="Top" Width="119" Height="38"  Click="btnCreaSocket_Click" RenderTransformOrigin="0.289,0.505"/>
-        <Label Name="lblIndirizzoIp" Content="indirizzo IP" HorizontalAlignment="Left" Margin="59,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
-        <Label Name="lblPorta" Content="Porta" HorizontalAlignment="Left" Margin="297,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
-        <Label Name="lblErrore" HorizontalAlignment="Left" Margin="470,31,0,0" VerticalAlignment="Top"/>
-        <Button Name="btnGioca" IsEnabled="False" Content="Gioca a morra cinese" HorizontalAlignment="Left" Background="Red" FontSize="20" FontWeight="Bold" Margin="212,156,0,0" VerticalAlignment="Top" Width="209" Height="42" Click="btnGioca_Click" RenderTransformOrigin="0.514,0.525"/>
+        <TextBox VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Name="txtIP" HorizontalAlignment="Left" Height="38" Margin="34,56,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+        <TextBox VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Name="txtPort" HorizontalAlignment="Left" Height="38" Margin="247,56,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="134"/>
+        <Button FontWeight="Bold" FontSize="17" Background="GreenYellow" Name="btnCreaSocket" Content="Crea socket" HorizontalAlignment="Left" Margin="470,56,0,0" VerticalAlignment="Top" Width="119" Height="38"  Click="btnCreaSocket_Click" RenderTransformOrigin="0.289,0.505"/>
+        <Label FontSize="15" FontWeight="Bold" Name="lblIndirizzoIp" Content="indirizzo IP" HorizontalAlignment="Left" Margin="47,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
+        <Label FontSize="15" FontWeight="Bold" Name="lblPorta" Content="Porta" HorizontalAlignment="Left" Margin="293,21,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
+        <Label Name="lblErrore" Foreground="Red" HorizontalAlignment="Left" Margin="444,30,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.529,0.444"/>
+        <Button Name="btnGioca" IsEnabled="False" Content="Gioca a morra cinese" HorizontalAlignment="Left" Background="Bisque" FontSize="20" FontWeight="Bold" Margin="212,156,0,0" VerticalAlignment="Top" Width="209" Height="42" Click="btnGioca_Click" RenderTransformOrigin="0.514,0.525"/>
 
         <Button Name="btnsasso" HorizontalAlignment="Left" Margin="84,100,0,31.2"  Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
             <Image  x:Name="imgSasso" Source="immagini\sasso.png"  Stretch="Uniform" Visibility="Hidden"/>
@@ -28,8 +28,8 @@
             <Image x:Name="imgForbici" Source="immagini\forbici.png" Stretch="Uniform"/>
         </Button>
         
-        <Label Name="lblFaiScelta" Content="Fai la tua scelta:" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="20" />
+        <Label Name="lblFaiScelta" Content="Fai la tua scelta tra sasso carta e forbici:" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="20" />
         <Button x:Name="btnConferma" Content="Conferma Scelta" Width="150" FontWeight="Bold" FontSize="17" VerticalAlignment="Bottom" Margin="0,0,0,10" Height="50" Click="btnConferma_Click" Visibility="Hidden" IsEnabled="False"/>
-        <Label Name="lblVittoria" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Label Name="lblVittoria" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
     </Grid>
 </Window>
