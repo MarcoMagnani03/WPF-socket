@@ -74,13 +74,17 @@ namespace APP_WPF_socket
             if(!int.TryParse((txtPort.Text),out tmp))
             {
                 lblErrore.Content = "La porta inserita è scorretta";
+                btnGioca.IsEnabled = false;
             }
             if (btnGioca.IsEnabled)
             {
                 lblErrore.Visibility = Visibility.Visible;
             }
-            Thread ricezione = new Thread(new ParameterizedThreadStart(SocketReceive));
-            ricezione.Start(sourceSocket);
+            if (btnGioca.IsEnabled)
+            {
+                Thread ricezione = new Thread(new ParameterizedThreadStart(SocketReceive));
+                ricezione.Start(sourceSocket);
+            }
         }
         //async fa in modo che mentre il thread è in ascolto l'interfaccia non si interrompe
         public async void SocketReceive(object sockSource)
@@ -161,9 +165,6 @@ namespace APP_WPF_socket
                         {
                             lblVittoria.Content = tmp;
                             lblVittoria.Visibility = Visibility.Visible;
-                            string ipAddress = txtIP.Text;
-                            int port = int.Parse(txtPort.Text);
-                            SocketSend(IPAddress.Parse(ipAddress), port, simbolo);
                         }));
                     }
                 }

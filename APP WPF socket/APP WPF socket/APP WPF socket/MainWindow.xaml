@@ -10,21 +10,24 @@
         <TextBox Name="txtIP" HorizontalAlignment="Left" Height="38" Margin="34,56,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
         <TextBox Name="txtPort" HorizontalAlignment="Left" Height="38" Margin="247,56,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="134"/>
         <Button Background="GreenYellow" Name="btnCreaSocket" Content="Crea socket" HorizontalAlignment="Left" Margin="470,56,0,0" VerticalAlignment="Top" Width="119" Height="38"  Click="btnCreaSocket_Click" RenderTransformOrigin="0.289,0.505"/>
-        <Label Name="lblIndirizzoIp" Content="indirizzo IP" HorizontalAlignment="Left" Margin="64,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
+        <Label Name="lblIndirizzoIp" Content="indirizzo IP" HorizontalAlignment="Left" Margin="59,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
         <Label Name="lblPorta" Content="Porta" HorizontalAlignment="Left" Margin="297,22,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.73,0.729"/>
         <Label Name="lblErrore" HorizontalAlignment="Left" Margin="470,31,0,0" VerticalAlignment="Top"/>
         <Button Name="btnGioca" IsEnabled="False" Content="Gioca a morra cinese" HorizontalAlignment="Left" Background="Red" FontSize="20" FontWeight="Bold" Margin="212,156,0,0" VerticalAlignment="Top" Width="209" Height="42" Click="btnGioca_Click" RenderTransformOrigin="0.514,0.525"/>
 
-        <Button Name="btnsasso" HorizontalAlignment="Left" Margin="84,100,0,31.2"  Background="White" Height="100" Visibility="Collapsed" Width="70" Click="Button_Click">
-            <Image  x:Name="imgSasso" Source="sasso.png"  Stretch="Uniform" Visibility="Hidden"/>
+        <Button Name="btnsasso" HorizontalAlignment="Left" Margin="84,100,0,31.2"  Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
+            <Image  x:Name="imgSasso" Source="immagini\sasso.png"  Stretch="Uniform" Visibility="Hidden"/>
         </Button>
-        <Button Name="btncarta" Background="White" Margin="265,100,281.8,31.2" HorizontalAlignment="Center" Height="100" Width="70" Click="Button_Click" Visibility="Collapsed">
-            <Image x:Name="imgCarta" Source="carta.png" Stretch="Uniform" Visibility="Hidden"/>
 
+        <Button Name="btncarta"  Margin="265,100,281.8,31.2" HorizontalAlignment="Center" Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
+            <Image x:Name="imgCarta" Source="immagini\carta.png" Stretch="Uniform"/>
         </Button>
-        <Button Name="btnforbici"  Background="White" Margin="0,100,102.8,31.2" HorizontalAlignment="Right" Height="100" Width="70" Click="Button_Click" Visibility="Collapsed" >
-            <Image x:Name="imgForbici" Source="forbici.png" Stretch="Uniform" Visibility="Hidden"/>
+
+
+        <Button Name="btnforbici" Margin="0,100,102.8,31.2" HorizontalAlignment="Right" Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
+            <Image x:Name="imgForbici" Source="immagini\forbici.png" Stretch="Uniform"/>
         </Button>
+        
         <Label Name="lblFaiScelta" Content="Fai la tua scelta:" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="20" />
         <Button x:Name="btnConferma" Content="Conferma Scelta" Width="150" FontWeight="Bold" FontSize="17" VerticalAlignment="Bottom" Margin="0,0,0,10" Height="50" Click="btnConferma_Click" Visibility="Hidden" IsEnabled="False"/>
         <Label Name="lblVittoria" VerticalAlignment="Center" HorizontalAlignment="Center"/>
