@@ -48,7 +48,7 @@ namespace APP_WPF_socket
             if (numeroIp.Length != 4)
             {
                 btnGioca.IsEnabled = false;
-                lblErrore.Content = "L'indirizzo IP selezionato è scorretto";
+                lblErrore.Content = "L'indirizzo IP selezionato è errato";
                 lblErrore.Visibility = Visibility.Visible;
             }
             int tmp;
@@ -57,7 +57,7 @@ namespace APP_WPF_socket
                 if (!int.TryParse(numeroIp[i],out tmp))
                 {
                     btnGioca.IsEnabled = false;
-                    lblErrore.Content = "L'indirizzo IP selezionato è scorretto, sono presenti dei caratteri scorretti";
+                    lblErrore.Content = $"L'indirizzo IP selezionato è errato \n      sono presenti dei caratteri\n                 non numerici";
                     lblErrore.Visibility = Visibility.Visible;
                 }
             }
@@ -68,14 +68,14 @@ namespace APP_WPF_socket
                     if (int.Parse(numeroIp[i]) < 0 || int.Parse(numeroIp[i]) > 255)
                     {
                         btnGioca.IsEnabled = false;
-                        lblErrore.Content = $"L'indirizzo IP selezionato contiene un valore inferiore allo 0 o superiore al 255";
+                        lblErrore.Content = $"L'indirizzo IP selezionato contiene\n          un valore inferiore allo 0\n                o superiore al 255";
                         lblErrore.Visibility = Visibility.Visible;
                     }
                 }
             }
             if(!int.TryParse((txtPort.Text),out tmp))
             {
-                lblErrore.Content = "La porta inserita è scorretta";
+                lblErrore.Content = "La porta inserita non è valida";
                 btnGioca.IsEnabled = false;
             }
             if (btnGioca.IsEnabled)
@@ -316,6 +316,12 @@ namespace APP_WPF_socket
             btnsasso.Visibility = Visibility.Hidden;
             btnforbici.Visibility = Visibility.Hidden;
             btncarta.Visibility = Visibility.Hidden;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            txtPort.Text = "56000";
+            txtIP.Focus();
         }
     }
 }
