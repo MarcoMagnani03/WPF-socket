@@ -96,6 +96,8 @@ namespace APP_WPF_socket
             Socket t = new Socket(ipendp.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
             
             t.Bind(ipendp);
+            
+
 
             Byte[] bytesRicevuti = new Byte[256];
 
@@ -114,72 +116,83 @@ namespace APP_WPF_socket
                         //quello che riceve sul socket lo codifica in ASCII e lo mette dentro message
                         contaCaratteri = t.Receive(bytesRicevuti,bytesRicevuti.Length,0);
                         message = message + Encoding.ASCII.GetString(bytesRicevuti,0,contaCaratteri);
-                        //si usa quando nei thread bisogna aggiornare le interfacce. Se non lo si usa da errore
-                        switch (message)
+                        if (message == "partenza")
                         {
-                            //QUI controllo quale dei due utenti ha vinto controllando le varie casistiche
-                            case "sasso":
-                                switch (simbolo)
-                                {
-                                    case "sasso":
-                                        tmp = "Anche il tuo avversaro ha scelto sasso è un PAREGGIO";
-                                        break;
-                                    case "carta":
-                                        tmp = "Il tuo avversario ha scelto sasso mentre tu carta hai VINTO";
-                                        break;
-                                    case "forbici":
-                                        tmp = "Il tuo avversario ha scelto sasso mentre tu forbici hai PERSO";
-                                        break;
-                                }
-                                break;
-                            case "carta":
-                                switch (simbolo)
-                                {
-                                    case "sasso":
-                                        tmp = "Il tuo avversario ha scelto carta mentre tu sasso hai PERSO";
-                                        break;
-                                    case "carta":
-                                        tmp = "Anche il tuo avversaro ha scelto carta è un PAREGGIO";
-                                        break;
-                                    case "forbici":
-                                        tmp = "Il tuo avversario ha scelto carta mentre tu forbici hai VINTO";
-                                        break;
-                                }
-                                break;
-                            case "forbici":
-                                switch (simbolo)
-                                {
-                                    case "sasso":
-                                        tmp = "Il tuo avversario ha scelto forbici mentre tu sasso hai VINTO";
-                                        break;
-                                    case "carta":
-                                        tmp = "Il tuo avversario ha scelto forbici mentre tu carta hai PERSO";
-                                        break;
-                                    case "forbici":
-                                        tmp = "Anche il tuo avversaro ha scelto forbici è un PAREGGIO";
-                                        break;
-                                }
-                                break;
+                            btnConferma.IsEnabled = true;
                         }
-                        this.Dispatcher.BeginInvoke(new Action(() =>
+                        else
                         {
-                            lblVittoria.Content = tmp;
-                            lblVittoria.Visibility = Visibility.Visible;
-                            if (tmp.Contains("PERSO"))
+                            switch (message)
                             {
-                                lblVittoria.Foreground = Brushes.Red;
+                                //QUI controllo quale dei due utenti ha vinto controllando le varie casistiche
+                                case "sasso":
+                                    switch (simbolo)
+                                    {
+                                        case "sasso":
+                                            tmp = "Anche il tuo avversaro ha scelto sasso è un PAREGGIO";
+                                            break;
+                                        case "carta":
+                                            tmp = "Il tuo avversario ha scelto sasso mentre tu carta hai VINTO";
+                                            break;
+                                        case "forbici":
+                                            tmp = "Il tuo avversario ha scelto sasso mentre tu forbici hai PERSO";
+                                            break;
+                                    }
+                                    break;
+                                case "carta":
+                                    switch (simbolo)
+                                    {
+                                        case "sasso":
+                                            tmp = "Il tuo avversario ha scelto carta mentre tu sasso hai PERSO";
+                                            break;
+                                        case "carta":
+                                            tmp = "Anche il tuo avversaro ha scelto carta è un PAREGGIO";
+                                            break;
+                                        case "forbici":
+                                            tmp = "Il tuo avversario ha scelto carta mentre tu forbici hai VINTO";
+                                            break;
+                                    }
+                                    break;
+                                case "forbici":
+                                    switch (simbolo)
+                                    {
+                                        case "sasso":
+                                            tmp = "Il tuo avversario ha scelto forbici mentre tu sasso hai VINTO";
+                                            break;
+                                        case "carta":
+                                            tmp = "Il tuo avversario ha scelto forbici mentre tu carta hai PERSO";
+                                            break;
+                                        case "forbici":
+                                            tmp = "Anche il tuo avversaro ha scelto forbici è un PAREGGIO";
+                                            break;
+                                    }
+                                    break;
                             }
-                            if (tmp.Contains("VINTO"))
+                            //si usa quando nei thread bisogna aggiornare le interfacce. Se non lo si usa da errore
+                            this.Dispatcher.BeginInvoke(new Action(() =>
                             {
-                                lblVittoria.Foreground = Brushes.Green;
-                            }
-                            if (tmp.Contains("PAREGGIO"))
-                            {
-                                lblVittoria.Foreground = Brushes.Blue;
-                               
-                            }
-                            btnRigioca.Visibility = Visibility.Visible;
-                        }));
+                                lblVittoria.Content = tmp;
+                                lblVittoria.Visibility = Visibility.Visible;
+                                if (tmp.Contains("PERSO"))
+                                {
+                                    lblVittoria.Foreground = Brushes.Red;
+                                }
+                                if (tmp.Contains("VINTO"))
+                                {
+                                    lblVittoria.Foreground = Brushes.Green;
+                                }
+                                if (tmp.Contains("PAREGGIO"))
+                                {
+                                    lblVittoria.Foreground = Brushes.Blue;
+
+                                }
+                                if (lblVittoria.Content.ToString() != "")
+                                {
+                                    btnRigioca.Visibility = Visibility.Visible;
+                                }
+                            }));
+                        }
+                        
                     }
                 }
             });
@@ -190,7 +203,6 @@ namespace APP_WPF_socket
             //transformiamo il messaggio in byte
             Byte[] byteInviati = Encoding.ASCII.GetBytes(messaggio);
             Socket s = new Socket(dest.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
-
             string vittoria = "";
             switch (message)
             {
@@ -254,7 +266,10 @@ namespace APP_WPF_socket
                 {
                     lblVittoria.Foreground = Brushes.Blue;
                 }
-                btnRigioca.Visibility = Visibility.Visible;
+                if (lblVittoria.Content.ToString() != "")
+                {
+                    btnRigioca.Visibility = Visibility.Visible;
+                }
             }));
 
             //Andiamo a creare il socket del destinatario
@@ -284,7 +299,6 @@ namespace APP_WPF_socket
                     btnforbici.IsEnabled = false;
                     break;
             }
-            btnConferma.IsEnabled = true;
         }
 
         private void btnGioca_Click(object sender, RoutedEventArgs e)
@@ -304,6 +318,9 @@ namespace APP_WPF_socket
             imgForbici.Visibility = Visibility.Visible;
             imgSasso.Visibility = Visibility.Visible;
             btnConferma.Visibility = Visibility.Visible;
+            string ipAddress = txtIP.Text;
+            int port = int.Parse(txtPort.Text);
+            SocketSend(IPAddress.Parse(ipAddress), port, "partenza");
         }
 
         private void btnConferma_Click(object sender, RoutedEventArgs e)
@@ -330,13 +347,13 @@ namespace APP_WPF_socket
         private void btnRigioca_Click(object sender, RoutedEventArgs e)
         {
             btnRigioca.Visibility = Visibility.Hidden;
-            lblIndirizzoIp.Visibility = Visibility.Visible;
-            lblPorta.Visibility = Visibility.Visible;
-            txtIP.Visibility = Visibility.Visible;
-            txtPort.Visibility = Visibility.Visible;
-            btnGioca.Visibility = Visibility.Visible;
-            btnCreaSocket.Visibility = Visibility.Visible;
             lblVittoria.Visibility = Visibility.Hidden;
+            btncarta.Visibility = Visibility.Visible;
+            btnforbici.Visibility = Visibility.Visible;
+            btnsasso.Visibility = Visibility.Visible;
+            btnConferma.Visibility = Visibility.Visible;
+            lblFaiScelta.Visibility = Visibility.Visible;
+            lblVittoria.Content = "";
         }
     }
 }
