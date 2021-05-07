@@ -27,6 +27,8 @@ namespace APP_WPF_socket
         static private string simbolo;
         static private string message;
         static private string simboloConfermato;
+        static private string usernameAvversario;
+        static private string nomeUtente;
         public MainWindow()
         {
             InitializeComponent();
@@ -56,8 +58,7 @@ namespace APP_WPF_socket
             if (numeroIp.Length != 4)
             {
                 btnGioca.IsEnabled = false;
-                lblErrore.Content = "L'indirizzo IP selezionato è errato";
-                lblErrore.Visibility = Visibility.Visible;
+                MessageBox.Show("L'indirizzo IP selezionato è errato");
             }
             int tmp;
             for (int i = 0; i < numeroIp.Length; i++)
@@ -65,8 +66,7 @@ namespace APP_WPF_socket
                 if (!int.TryParse(numeroIp[i],out tmp))
                 {
                     btnGioca.IsEnabled = false;
-                    lblErrore.Content = $"L'indirizzo IP selezionato è errato \n      sono presenti dei caratteri\n                 non numerici";
-                    lblErrore.Visibility = Visibility.Visible;
+                    MessageBox.Show($"L'indirizzo IP selezionato è errato sono presenti dei caratteri non numerici");
                 }
             }
             if (btnGioca.IsEnabled)
@@ -76,19 +76,23 @@ namespace APP_WPF_socket
                     if (int.Parse(numeroIp[i]) < 0 || int.Parse(numeroIp[i]) > 255)
                     {
                         btnGioca.IsEnabled = false;
-                        lblErrore.Content = $"L'indirizzo IP selezionato contiene\n          un valore inferiore allo 0\n                o superiore al 255";
-                        lblErrore.Visibility = Visibility.Visible;
+                        MessageBox.Show($"L'indirizzo IP selezionato contiene un valore inferiore allo 0 o superiore al 255");
                     }
                 }
             }
             if(!int.TryParse((txtPort.Text),out tmp))
             {
-                lblErrore.Content = "La porta inserita non è valida";
+                MessageBox.Show("La porta inserita non è valida");
                 btnGioca.IsEnabled = false;
+            }
+            if (txtUsername.Text == "")
+            {
+                btnGioca.IsEnabled = false;
+                MessageBox.Show("Non è stato inserito lo username");
             }
             if (btnGioca.IsEnabled)
             {
-                lblErrore.Visibility = Visibility.Visible;
+                nomeUtente = txtUsername.Text;
             }
         }
         //async fa in modo che mentre il thread è in ascolto l'interfaccia non si interrompe
@@ -115,16 +119,20 @@ namespace APP_WPF_socket
                     if (t.Available > 0)
                     {
                         message = "";
-                        string tmp="";
                         //quello che riceve sul socket lo codifica in ASCII e lo mette dentro message
                         contaCaratteri = t.Receive(bytesRicevuti,bytesRicevuti.Length,0);
                         message = message + Encoding.ASCII.GetString(bytesRicevuti,0,contaCaratteri);
                         //Qui controllo se il messaggio che mi è arrivato è per la sincronizzazione o se è perchè mi è arrivato il simbolo selezionato dall'avversario
-                        if (message == "partenza")
+                        if (message.EndsWith("1"))
                         {
                             this.Dispatcher.BeginInvoke(new Action(() =>
                             {
-                                btnConferma.IsEnabled = true;
+                                btnsasso.IsEnabled = true;
+                                btncarta.IsEnabled = true;
+                                btnforbici.IsEnabled = true;
+                                usernameAvversario = message.Substring(0, message.Length-1);
+                                txtMostraUsername.Text = "";
+                                txtMostraUsername.Text = $"{txtUsername.Text} giocherai contro {usernameAvversario}";
                             }));
                         }
                         else
@@ -142,6 +150,8 @@ namespace APP_WPF_socket
             Byte[] byteInviati = Encoding.ASCII.GetBytes(messaggio);
             Socket s = new Socket(dest.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
             ControlloVittoria();
+            lblVittoria.Content = "Attendi la giocata dell'avversario...";
+            lblVittoria.Visibility = Visibility.Visible;
             //Andiamo a creare il socket del destinatario
             IPEndPoint remote_endpoint = new IPEndPoint(dest, destport);
             s.SendTo(byteInviati, remote_endpoint);
@@ -151,18 +161,18 @@ namespace APP_WPF_socket
             string vittoria = "";
             switch (message)
             {
-                //QUI controllo quale dei due utenti ha vinto controllando le varie casistiche, lo devo controllare anche qui perchè altrimenti la vittoria me la da solamente da chi riceve il secondo turno.
+                //QUI controllo quale dei due utenti ha vinto controllando le varie casistiche.
                 case "sasso":
                     switch (simbolo)
                     {
                         case "sasso":
-                            vittoria = "Anche il tuo avversaro ha scelto sasso è un PAREGGIO";
+                            vittoria = $"Anche {usernameAvversario} ha scelto sasso è un PAREGGIO";
                             break;
                         case "carta":
-                            vittoria = "Il tuo avversario ha scelto sasso mentre tu carta hai VINTO";
+                            vittoria = $"{usernameAvversario} ha scelto sasso mentre tu carta \n         complimenti {nomeUtente} hai VINTO";
                             break;
                         case "forbici":
-                            vittoria = "Il tuo avversario ha scelto sasso mentre tu forbici hai PERSO";
+                            vittoria = $"{usernameAvversario} ha scelto sasso mentre tu forbici \n          mi dispiace {nomeUtente} hai PERSO";
                             break;
                     }
                     break;
@@ -170,13 +180,13 @@ namespace APP_WPF_socket
                     switch (simbolo)
                     {
                         case "sasso":
-                            vittoria = "Il tuo avversario ha scelto carta mentre tu sasso hai PERSO";
+                            vittoria = $"{usernameAvversario} ha scelto carta mentre tu sasso \n         mi dispiace {nomeUtente} hai PERSO";
                             break;
                         case "carta":
-                            vittoria = "Anche il tuo avversaro ha scelto carta è un PAREGGIO";
+                            vittoria = $"Anche {usernameAvversario} ha scelto carta è un PAREGGIO";
                             break;
                         case "forbici":
-                            vittoria = "Il tuo avversario ha scelto carta mentre tu forbici hai VINTO";
+                            vittoria = $"{usernameAvversario} ha scelto carta mentre tu forbici \n         complimenti {nomeUtente} hai VINTO";
                             break;
                     }
                     break;
@@ -184,13 +194,13 @@ namespace APP_WPF_socket
                     switch (simbolo)
                     {
                         case "sasso":
-                            vittoria = "Il tuo avversario ha scelto forbici mentre tu sasso hai VINTO";
+                            vittoria = $"{usernameAvversario} ha scelto forbici mentre tu sasso \n         complimenti {nomeUtente} hai VINTO";
                             break;
                         case "carta":
-                            vittoria = "Il tuo avversario ha scelto forbici mentre tu carta hai PERSO";
+                            vittoria = $"{usernameAvversario} ha scelto forbici mentre tu carta \n         mi dispiace {nomeUtente} hai PERSO";
                             break;
                         case "forbici":
-                            vittoria = "Anche il tuo avversaro ha scelto forbici è un PAREGGIO";
+                            vittoria = $"Anche {usernameAvversario} ha scelto forbici è un PAREGGIO";
                             break;
                     }
                     break;
@@ -216,10 +226,6 @@ namespace APP_WPF_socket
                 {
                     btnRigioca.Visibility = Visibility.Visible;
                 }
-                else
-                {
-                    lblVittoria.Content = "Attendi la giocata dell'avversario...";
-                }
             }));
 
 
@@ -227,38 +233,36 @@ namespace APP_WPF_socket
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             simboloConfermato = ((Button)sender).Name.Substring(3);
-            switch (simbolo)
+            switch (simboloConfermato)
             {
                 case "sasso":
                     btncarta.IsEnabled = true;
                     btnsasso.IsEnabled = false;
                     btnforbici.IsEnabled = true;
-                    lblCartaSelezionata.Visibility = Visibility.Hidden;
-                    lblForbiceSelezionata.Visibility = Visibility.Hidden;
-                    lblSassoSelezionato.Visibility = Visibility.Visible;
+                    lblSimboloSelezionato.Visibility = Visibility.Visible;
+                    lblSimboloSelezionato.Content = "Hai selezionato SASSO cliccare sul bottone conferma per inviare la tua giocata";
                     break;
                 case "carta":
                     btncarta.IsEnabled = false;
                     btnsasso.IsEnabled = true;
                     btnforbici.IsEnabled = true;
-                    lblCartaSelezionata.Visibility = Visibility.Visible;
-                    lblForbiceSelezionata.Visibility = Visibility.Hidden;
-                    lblSassoSelezionato.Visibility = Visibility.Hidden;
+                    lblSimboloSelezionato.Visibility = Visibility.Visible;
+                    lblSimboloSelezionato.Content = "Hai selezionato CARTA cliccare sul bottone conferma per inviare la tua giocata";
                     break;
                 case "forbici":
                     btncarta.IsEnabled = true;
                     btnsasso.IsEnabled = true;
                     btnforbici.IsEnabled = false;
-                    lblCartaSelezionata.Visibility = Visibility.Hidden;
-                    lblForbiceSelezionata.Visibility = Visibility.Visible;
-                    lblSassoSelezionato.Visibility = Visibility.Hidden;
+                    lblSimboloSelezionato.Visibility = Visibility.Visible;
+                    lblSimboloSelezionato.Content = "Hai selezionato FORBICI cliccare sul bottone conferma per inviare la tua giocata";
                     break;
             }
+            btnConferma.IsEnabled = true;
         }
 
         private void btnGioca_Click(object sender, RoutedEventArgs e)
         {
-            Height = 400;
+            Height = 500;
             txtIP.Visibility = Visibility.Hidden;
             txtPort.Visibility = Visibility.Hidden;
             lblIndirizzoIp.Visibility = Visibility.Hidden;
@@ -273,10 +277,16 @@ namespace APP_WPF_socket
             imgForbici.Visibility = Visibility.Visible;
             imgSasso.Visibility = Visibility.Visible;
             btnConferma.Visibility = Visibility.Visible;
+            txtUsername.Visibility = Visibility.Hidden;
+            lblUsername.Visibility = Visibility.Hidden;
             //Qui invio un messaggio al destinatario con partenza. Il bottone conferma del destinatario si accenderà solo quando riceverà questo messaggio
             string ipAddress = txtIP.Text;
             int port = int.Parse(txtPort.Text);
-            SocketSend(IPAddress.Parse(ipAddress), port, "partenza");
+            BordoUsername.Visibility = Visibility.Visible;
+            SocketSend(IPAddress.Parse(ipAddress), port, txtUsername.Text+"1");
+            txtMostraUsername.Text = "";
+            txtMostraUsername.Text = $"{txtUsername.Text} giocherai contro {usernameAvversario}";
+            
         }
 
         private void btnConferma_Click(object sender, RoutedEventArgs e)
@@ -284,14 +294,14 @@ namespace APP_WPF_socket
             string ipAddress = txtIP.Text;
             int port = int.Parse(txtPort.Text);
             simbolo = simboloConfermato;
-            lblVittoria.Content = "Attendi la giocata dell'avversario...";
-            lblVittoria.Visibility = Visibility.Visible;
             SocketSend(IPAddress.Parse(ipAddress), port, simbolo);
             btnConferma.Visibility = Visibility.Hidden;
             lblFaiScelta.Visibility = Visibility.Hidden;
             btnsasso.Visibility = Visibility.Hidden;
             btnforbici.Visibility = Visibility.Hidden;
             btncarta.Visibility = Visibility.Hidden;
+            BordoUsername.Visibility = Visibility.Hidden;
+            lblSimboloSelezionato.Visibility = Visibility.Hidden;
         }
 
 
@@ -308,6 +318,9 @@ namespace APP_WPF_socket
             simbolo = "";
             simboloConfermato = "";
             message = "";
+            btncarta.IsEnabled = true;
+            btnforbici.IsEnabled = true;
+            btnsasso.IsEnabled = true;
         }
     }
 }
