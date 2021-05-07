@@ -31,5 +31,6 @@
         <Label Name="lblFaiScelta" Content="Fai la tua scelta tra sasso carta e forbici:" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="20" />
         <Button x:Name="btnConferma" Content="Conferma Scelta" Width="150" FontWeight="Bold" FontSize="17" VerticalAlignment="Bottom" Margin="0,0,0,10" Height="50" Click="btnConferma_Click" Visibility="Hidden" IsEnabled="False"/>
         <Label Name="lblVittoria" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Margin="300,125,308.8,97.2"/>
+        <Button Name="btnRigioca" Content="Torna al menù principale" Width="150" Height="30" VerticalAlignment="Bottom" Margin="0,0,0,10" Background="GreenYellow" Click="btnRigioca_Click" />
     </Grid>
 </Window>

@@ -176,7 +176,9 @@ namespace APP_WPF_socket
                             if (tmp.Contains("PAREGGIO"))
                             {
                                 lblVittoria.Foreground = Brushes.Blue;
+                               
                             }
+                            btnRigioca.Visibility = Visibility.Visible;
                         }));
                     }
                 }
@@ -252,6 +254,7 @@ namespace APP_WPF_socket
                 {
                     lblVittoria.Foreground = Brushes.Blue;
                 }
+                btnRigioca.Visibility = Visibility.Visible;
             }));
 
             //Andiamo a creare il socket del destinatario
@@ -322,6 +325,18 @@ namespace APP_WPF_socket
         {
             txtPort.Text = "56000";
             txtIP.Focus();
+        }
+
+        private void btnRigioca_Click(object sender, RoutedEventArgs e)
+        {
+            btnRigioca.Visibility = Visibility.Hidden;
+            lblIndirizzoIp.Visibility = Visibility.Visible;
+            lblPorta.Visibility = Visibility.Visible;
+            txtIP.Visibility = Visibility.Visible;
+            txtPort.Visibility = Visibility.Visible;
+            btnGioca.Visibility = Visibility.Visible;
+            btnCreaSocket.Visibility = Visibility.Visible;
+            lblVittoria.Visibility = Visibility.Hidden;
         }
     }
 }
