@@ -31,17 +31,25 @@ namespace APP_WPF_socket
         {
             InitializeComponent();
         }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            txtPort.Text = "56000";
+            txtIP.Focus();
+            string localIP;
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
+            {
+                socket.Connect("8.8.8.8", 65530);
+                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;
+                localIP = endPoint.Address.ToString();
+            }
+            IPEndPoint sourceSocket = new IPEndPoint(IPAddress.Parse(localIP), 56000);
+            Thread ricezione = new Thread(new ParameterizedThreadStart(SocketReceive));
+            ricezione.Start(sourceSocket);
+        }
         private void btnCreaSocket_Click(object sender, RoutedEventArgs e)
         {
             //creiamo il source socket prendendo l'indirizzo Ip del nostro pc e inserendo un porta libera
-            string localIP;             
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0)) 
-            {                 
-                socket.Connect("8.8.8.8", 65530);                
-                IPEndPoint endPoint = socket.LocalEndPoint as IPEndPoint;  
-                localIP = endPoint.Address.ToString();             
-            }             
-            IPEndPoint sourceSocket = new IPEndPoint(IPAddress.Parse(localIP), 56000);
+           
             string[] numeroIp = txtIP.Text.Split('.');
             btnGioca.IsEnabled = true;
             //controllo contenuto delle textBox
@@ -82,11 +90,6 @@ namespace APP_WPF_socket
             {
                 lblErrore.Visibility = Visibility.Visible;
             }
-            if (btnGioca.IsEnabled)
-            {
-                Thread ricezione = new Thread(new ParameterizedThreadStart(SocketReceive));
-                ricezione.Start(sourceSocket);
-            }
         }
         //async fa in modo che mentre il thread è in ascolto l'interfaccia non si interrompe
         public async void SocketReceive(object sockSource)
@@ -116,83 +119,18 @@ namespace APP_WPF_socket
                         //quello che riceve sul socket lo codifica in ASCII e lo mette dentro message
                         contaCaratteri = t.Receive(bytesRicevuti,bytesRicevuti.Length,0);
                         message = message + Encoding.ASCII.GetString(bytesRicevuti,0,contaCaratteri);
+                        //Qui controllo se il messaggio che mi è arrivato è per la sincronizzazione o se è perchè mi è arrivato il simbolo selezionato dall'avversario
                         if (message == "partenza")
                         {
-                            btnConferma.IsEnabled = true;
+                            this.Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                btnConferma.IsEnabled = true;
+                            }));
                         }
                         else
                         {
-                            switch (message)
-                            {
-                                //QUI controllo quale dei due utenti ha vinto controllando le varie casistiche
-                                case "sasso":
-                                    switch (simbolo)
-                                    {
-                                        case "sasso":
-                                            tmp = "Anche il tuo avversaro ha scelto sasso è un PAREGGIO";
-                                            break;
-                                        case "carta":
-                                            tmp = "Il tuo avversario ha scelto sasso mentre tu carta hai VINTO";
-                                            break;
-                                        case "forbici":
-                                            tmp = "Il tuo avversario ha scelto sasso mentre tu forbici hai PERSO";
-                                            break;
-                                    }
-                                    break;
-                                case "carta":
-                                    switch (simbolo)
-                                    {
-                                        case "sasso":
-                                            tmp = "Il tuo avversario ha scelto carta mentre tu sasso hai PERSO";
-                                            break;
-                                        case "carta":
-                                            tmp = "Anche il tuo avversaro ha scelto carta è un PAREGGIO";
-                                            break;
-                                        case "forbici":
-                                            tmp = "Il tuo avversario ha scelto carta mentre tu forbici hai VINTO";
-                                            break;
-                                    }
-                                    break;
-                                case "forbici":
-                                    switch (simbolo)
-                                    {
-                                        case "sasso":
-                                            tmp = "Il tuo avversario ha scelto forbici mentre tu sasso hai VINTO";
-                                            break;
-                                        case "carta":
-                                            tmp = "Il tuo avversario ha scelto forbici mentre tu carta hai PERSO";
-                                            break;
-                                        case "forbici":
-                                            tmp = "Anche il tuo avversaro ha scelto forbici è un PAREGGIO";
-                                            break;
-                                    }
-                                    break;
-                            }
-                            //si usa quando nei thread bisogna aggiornare le interfacce. Se non lo si usa da errore
-                            this.Dispatcher.BeginInvoke(new Action(() =>
-                            {
-                                lblVittoria.Content = tmp;
-                                lblVittoria.Visibility = Visibility.Visible;
-                                if (tmp.Contains("PERSO"))
-                                {
-                                    lblVittoria.Foreground = Brushes.Red;
-                                }
-                                if (tmp.Contains("VINTO"))
-                                {
-                                    lblVittoria.Foreground = Brushes.Green;
-                                }
-                                if (tmp.Contains("PAREGGIO"))
-                                {
-                                    lblVittoria.Foreground = Brushes.Blue;
-
-                                }
-                                if (lblVittoria.Content.ToString() != "")
-                                {
-                                    btnRigioca.Visibility = Visibility.Visible;
-                                }
-                            }));
-                        }
-                        
+                            ControlloVittoria();
+                        } 
                     }
                 }
             });
@@ -203,6 +141,13 @@ namespace APP_WPF_socket
             //transformiamo il messaggio in byte
             Byte[] byteInviati = Encoding.ASCII.GetBytes(messaggio);
             Socket s = new Socket(dest.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
+            ControlloVittoria();
+            //Andiamo a creare il socket del destinatario
+            IPEndPoint remote_endpoint = new IPEndPoint(dest, destport);
+            s.SendTo(byteInviati, remote_endpoint);
+        }
+        private void ControlloVittoria()
+        {
             string vittoria = "";
             switch (message)
             {
@@ -242,7 +187,7 @@ namespace APP_WPF_socket
                             vittoria = "Il tuo avversario ha scelto forbici mentre tu sasso hai VINTO";
                             break;
                         case "carta":
-                            vittoria = "Il tuo avversario ha scelto forbici mentre tu carta hai PERSO"; 
+                            vittoria = "Il tuo avversario ha scelto forbici mentre tu carta hai PERSO";
                             break;
                         case "forbici":
                             vittoria = "Anche il tuo avversaro ha scelto forbici è un PAREGGIO";
@@ -252,6 +197,7 @@ namespace APP_WPF_socket
             }
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
+
                 lblVittoria.Content = vittoria;
                 lblVittoria.Visibility = Visibility.Visible;
                 if (vittoria.Contains("PERSO"))
@@ -270,14 +216,14 @@ namespace APP_WPF_socket
                 {
                     btnRigioca.Visibility = Visibility.Visible;
                 }
+                else
+                {
+                    lblVittoria.Content = "Attendi la giocata dell'avversario...";
+                }
             }));
 
-            //Andiamo a creare il socket del destinatario
-            IPEndPoint remote_endpoint=new IPEndPoint(dest,destport);
-            s.SendTo(byteInviati, remote_endpoint);
 
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             simboloConfermato = ((Button)sender).Name.Substring(3);
@@ -287,16 +233,25 @@ namespace APP_WPF_socket
                     btncarta.IsEnabled = true;
                     btnsasso.IsEnabled = false;
                     btnforbici.IsEnabled = true;
+                    lblCartaSelezionata.Visibility = Visibility.Hidden;
+                    lblForbiceSelezionata.Visibility = Visibility.Hidden;
+                    lblSassoSelezionato.Visibility = Visibility.Visible;
                     break;
                 case "carta":
                     btncarta.IsEnabled = false;
                     btnsasso.IsEnabled = true;
                     btnforbici.IsEnabled = true;
+                    lblCartaSelezionata.Visibility = Visibility.Visible;
+                    lblForbiceSelezionata.Visibility = Visibility.Hidden;
+                    lblSassoSelezionato.Visibility = Visibility.Hidden;
                     break;
                 case "forbici":
                     btncarta.IsEnabled = true;
                     btnsasso.IsEnabled = true;
                     btnforbici.IsEnabled = false;
+                    lblCartaSelezionata.Visibility = Visibility.Hidden;
+                    lblForbiceSelezionata.Visibility = Visibility.Visible;
+                    lblSassoSelezionato.Visibility = Visibility.Hidden;
                     break;
             }
         }
@@ -318,6 +273,7 @@ namespace APP_WPF_socket
             imgForbici.Visibility = Visibility.Visible;
             imgSasso.Visibility = Visibility.Visible;
             btnConferma.Visibility = Visibility.Visible;
+            //Qui invio un messaggio al destinatario con partenza. Il bottone conferma del destinatario si accenderà solo quando riceverà questo messaggio
             string ipAddress = txtIP.Text;
             int port = int.Parse(txtPort.Text);
             SocketSend(IPAddress.Parse(ipAddress), port, "partenza");
@@ -338,11 +294,6 @@ namespace APP_WPF_socket
             btncarta.Visibility = Visibility.Hidden;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            txtPort.Text = "56000";
-            txtIP.Focus();
-        }
 
         private void btnRigioca_Click(object sender, RoutedEventArgs e)
         {
@@ -354,6 +305,9 @@ namespace APP_WPF_socket
             btnConferma.Visibility = Visibility.Visible;
             lblFaiScelta.Visibility = Visibility.Visible;
             lblVittoria.Content = "";
+            simbolo = "";
+            simboloConfermato = "";
+            message = "";
         }
     }
 }

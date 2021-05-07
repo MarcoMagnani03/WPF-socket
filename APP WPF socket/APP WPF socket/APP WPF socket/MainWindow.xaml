@@ -15,8 +15,8 @@
         <Label Name="lblErrore" Foreground="Red" HorizontalAlignment="Left" Margin="418,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.496,0.395" Height="55" Width="190"/>
         <Button Name="btnGioca" IsEnabled="False" Content="Gioca a morra cinese" HorizontalAlignment="Left" Background="Bisque" FontSize="20" FontWeight="Bold" Margin="212,156,0,0" VerticalAlignment="Top" Width="209" Height="42" Click="btnGioca_Click" RenderTransformOrigin="0.514,0.525"/>
 
-        <Button Name="btnsasso" HorizontalAlignment="Left" Margin="84,100,0,31.2"  Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
-            <Image  x:Name="imgSasso" Source="immagini\sasso.png"  Stretch="Uniform" Visibility="Hidden"/>
+        <Button Name="btnsasso" HorizontalAlignment="Left" Margin="84,100,0,31.2"  Height="100" Width="70" Click="Button_Click"  Visibility="Hidden">
+            <Image  x:Name="imgSasso" Source="immagini\sasso.png"  Stretch="Uniform" />
         </Button>
 
         <Button Name="btncarta"  Margin="265,100,281.8,31.2" HorizontalAlignment="Center" Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
@@ -31,6 +31,9 @@
         <Label Name="lblFaiScelta" Content="Fai la tua scelta tra sasso carta e forbici:" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" FontSize="20" />
         <Button x:Name="btnConferma" Content="Conferma Scelta" Width="150" FontWeight="Bold" FontSize="17" VerticalAlignment="Bottom" Margin="0,0,0,10" Height="50" Click="btnConferma_Click" Visibility="Hidden" IsEnabled="False"/>
         <Label Name="lblVittoria" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Margin="0,90,0,0"/>
-        <Button Name="btnRigioca" Content="Rigioca" Width="150" Height="70" FontSize="20" Visibility="Hidden" VerticalAlignment="Bottom" Margin="0,0,0,10" Background="GreenYellow" Click="btnRigioca_Click" />
+        <Button Name="btnRigioca" Content="Rigioca" FontWeight="Bold" Width="150" Height="70" FontSize="20" Visibility="Hidden" VerticalAlignment="Bottom" Margin="0,0,0,10" Background="GreenYellow" Click="btnRigioca_Click" />
+        <Label Name="lblSassoSelezionato" Margin="47,71,426.8,128.2" Content="Simbolo selezionato" FontSize="15" Visibility="Hidden"/>
+        <Label Name="lblCartaSelezionata" Margin="227,69,244.8,131.2" Content="Simbolo selezionato" FontSize="15" Visibility="Hidden"/>
+        <Label Name="lblForbiceSelezionata" HorizontalAlignment="Right" Margin="0,70,69.8,130.2" Content="Simbolo selezionato" FontSize="15" Visibility="Hidden"/>
     </Grid>
 </Window>
