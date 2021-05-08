@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
 
 namespace APP_WPF_socket
 {
@@ -29,12 +30,15 @@ namespace APP_WPF_socket
         static private string simboloConfermato;
         static private string usernameAvversario;
         static private string nomeUtente;
+        static private int nVittorieUtente;
+        static private int nVittorieAvversario;
         public MainWindow()
         {
             InitializeComponent();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //Qui vado a trovare in maniera automatica l'indirizzo ip sorgente
             txtPort.Text = "56000";
             txtIP.Focus();
             string localIP;
@@ -85,7 +89,7 @@ namespace APP_WPF_socket
                 MessageBox.Show("La porta inserita non è valida");
                 btnGioca.IsEnabled = false;
             }
-            if (txtUsername.Text == "")
+            if (txtUsername.Text.Trim() == "")
             {
                 btnGioca.IsEnabled = false;
                 MessageBox.Show("Non è stato inserito lo username");
@@ -150,18 +154,28 @@ namespace APP_WPF_socket
             Byte[] byteInviati = Encoding.ASCII.GetBytes(messaggio);
             Socket s = new Socket(dest.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
             ControlloVittoria();
-            lblVittoria.Content = "Attendi la giocata dell'avversario...";
-            lblVittoria.Visibility = Visibility.Visible;
+            int i = 0;
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (i != 0)
+                {
+                    lblVittoria.Content = "Attendi la giocata dell'avversario...";
+                    lblVittoria.Visibility = Visibility.Visible;
+                }
+                i++;
+            }));
             //Andiamo a creare il socket del destinatario
             IPEndPoint remote_endpoint = new IPEndPoint(dest, destport);
             s.SendTo(byteInviati, remote_endpoint);
         }
+
+
         private void ControlloVittoria()
         {
             string vittoria = "";
             switch (message)
             {
-                //QUI controllo quale dei due utenti ha vinto controllando le varie casistiche.
+                //QUI controllo quale dei due utenti ha vinto controllando le varie casistiche, e creando la stringa che darò in output.
                 case "sasso":
                     switch (simbolo)
                     {
@@ -169,10 +183,12 @@ namespace APP_WPF_socket
                             vittoria = $"Anche {usernameAvversario} ha scelto sasso è un PAREGGIO";
                             break;
                         case "carta":
-                            vittoria = $"{usernameAvversario} ha scelto sasso mentre tu carta \n         complimenti {nomeUtente} hai VINTO";
+                            vittoria = $"{usernameAvversario} ha scelto sasso mentre tu carta \ncomplimenti {nomeUtente} hai VINTO";
+                            nVittorieUtente++;
                             break;
                         case "forbici":
-                            vittoria = $"{usernameAvversario} ha scelto sasso mentre tu forbici \n          mi dispiace {nomeUtente} hai PERSO";
+                            vittoria = $"{usernameAvversario} ha scelto sasso mentre tu forbici \nmi dispiace {nomeUtente} hai PERSO";
+                            nVittorieAvversario++;
                             break;
                     }
                     break;
@@ -180,13 +196,15 @@ namespace APP_WPF_socket
                     switch (simbolo)
                     {
                         case "sasso":
-                            vittoria = $"{usernameAvversario} ha scelto carta mentre tu sasso \n         mi dispiace {nomeUtente} hai PERSO";
+                            vittoria = $"{usernameAvversario} ha scelto carta mentre tu sasso \nmi dispiace {nomeUtente} hai PERSO";
+                            nVittorieAvversario++;
                             break;
                         case "carta":
                             vittoria = $"Anche {usernameAvversario} ha scelto carta è un PAREGGIO";
                             break;
                         case "forbici":
-                            vittoria = $"{usernameAvversario} ha scelto carta mentre tu forbici \n         complimenti {nomeUtente} hai VINTO";
+                            vittoria = $"{usernameAvversario} ha scelto carta mentre tu forbici \ncomplimenti {nomeUtente} hai VINTO";
+                            nVittorieUtente++;
                             break;
                     }
                     break;
@@ -194,10 +212,12 @@ namespace APP_WPF_socket
                     switch (simbolo)
                     {
                         case "sasso":
-                            vittoria = $"{usernameAvversario} ha scelto forbici mentre tu sasso \n         complimenti {nomeUtente} hai VINTO";
+                            vittoria = $"{usernameAvversario} ha scelto forbici mentre tu sasso \ncomplimenti {nomeUtente} hai VINTO";
+                            nVittorieUtente++;
                             break;
                         case "carta":
-                            vittoria = $"{usernameAvversario} ha scelto forbici mentre tu carta \n         mi dispiace {nomeUtente} hai PERSO";
+                            vittoria = $"{usernameAvversario} ha scelto forbici mentre tu carta \nmi dispiace {nomeUtente} hai PERSO";
+                            nVittorieAvversario++;
                             break;
                         case "forbici":
                             vittoria = $"Anche {usernameAvversario} ha scelto forbici è un PAREGGIO";
@@ -205,6 +225,7 @@ namespace APP_WPF_socket
                     }
                     break;
             }
+            //Controllo se l'utente ha vinto o perso e in base a quello cambio il colore della scritta visualizzata alla fine
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
 
@@ -225,11 +246,37 @@ namespace APP_WPF_socket
                 if (lblVittoria.Content.ToString() != "")
                 {
                     btnRigioca.Visibility = Visibility.Visible;
+                    SalvaVittorie();
                 }
             }));
 
 
         }
+        //Qui salvo le vittorie dei due utenti all'interno di un file txt 
+        private void SalvaVittorie()
+        {
+            try
+            {
+                StreamWriter scrittore = new StreamWriter("risultati partite.txt");
+                scrittore.WriteLine($"Vittorie {nomeUtente}: {nVittorieUtente}");
+                scrittore.WriteLine($"Vittorie {usernameAvversario}: {nVittorieAvversario}");
+                scrittore.Close();
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.Message, "ERRORE IO", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show(ex.Message, "ERRORE formato", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch
+            {
+
+            }
+
+        }
+        //Qui controllo quale bottone è stato cliccato tra carta sasso e forbice, per farlo utilizzo il campo name dei bottoni. 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             simboloConfermato = ((Button)sender).Name.Substring(3);
@@ -283,7 +330,9 @@ namespace APP_WPF_socket
             string ipAddress = txtIP.Text;
             int port = int.Parse(txtPort.Text);
             BordoUsername.Visibility = Visibility.Visible;
+            //invio un segmento al destinatario per comunicargli lo username che ho scelto. Questo messaggio serve anche per la sincronizzazione con il destinatario
             SocketSend(IPAddress.Parse(ipAddress), port, txtUsername.Text+"1");
+
             txtMostraUsername.Text = "";
             txtMostraUsername.Text = $"{txtUsername.Text} giocherai contro {usernameAvversario}";
             
@@ -294,6 +343,7 @@ namespace APP_WPF_socket
             string ipAddress = txtIP.Text;
             int port = int.Parse(txtPort.Text);
             simbolo = simboloConfermato;
+            // con questo segmento comunico al destinatario il simbolo scelto
             SocketSend(IPAddress.Parse(ipAddress), port, simbolo);
             btnConferma.Visibility = Visibility.Hidden;
             lblFaiScelta.Visibility = Visibility.Hidden;
@@ -304,7 +354,7 @@ namespace APP_WPF_socket
             lblSimboloSelezionato.Visibility = Visibility.Hidden;
         }
 
-
+        //Con questo bottone permetto ai due utenti di poter rigiocare
         private void btnRigioca_Click(object sender, RoutedEventArgs e)
         {
             btnRigioca.Visibility = Visibility.Hidden;

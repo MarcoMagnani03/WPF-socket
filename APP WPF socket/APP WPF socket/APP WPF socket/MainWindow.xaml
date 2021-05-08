@@ -28,9 +28,9 @@
         </Button>
 
         <Label Name="lblFaiScelta" Content="Fai la tua scelta tra sasso carta e forbici:" Visibility="Collapsed"  HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,60,0,0" FontSize="20" />
-        <Button x:Name="btnConferma" Background="LightYellow" Content="Conferma Scelta" Width="150" FontWeight="Bold" FontSize="17" VerticalAlignment="Bottom" Margin="0,0,0,10" Height="50" Click="btnConferma_Click" Visibility="Hidden" IsEnabled="False"/>
-        <Label Name="lblVittoria" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Margin="0,90,0,0" Visibility="Collapsed"/>
-        <Button Name="btnRigioca" Content="Rigioca" FontWeight="Bold" Width="150" Height="70" FontSize="20" Visibility="Hidden" VerticalAlignment="Bottom" Margin="0,0,0,10" Background="GreenYellow" Click="btnRigioca_Click" />
+        <Button x:Name="btnConferma" Background="LightYellow" Content="Conferma Scelta" Width="150" FontWeight="Bold" FontSize="17" VerticalAlignment="Bottom" Margin="0,0,0,30" Height="50" Click="btnConferma_Click" Visibility="Hidden" IsEnabled="False"/>
+        <Label Name="lblVittoria" HorizontalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Margin="0,90,0,0" Visibility="Collapsed"/>
+        <Button Name="btnRigioca" Content="Rigioca" FontWeight="Bold" Width="150" Height="70" FontSize="20" Visibility="Hidden" VerticalAlignment="Bottom" Margin="0,0,0,30" Background="GreenYellow" Click="btnRigioca_Click" />
         <Label Name="lblSimboloSelezionato" FontWeight="Bold" Visibility="Collapsed" Margin="0,0,0,100"  VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="15" />
         <TextBox VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Name="txtUsername" HorizontalAlignment="Left" Height="38" Margin="34,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label FontSize="15" FontWeight="Bold" x:Name="lblUsername" Content="Username" HorizontalAlignment="Left" Margin="47,130,0,0" VerticalAlignment="Top" />
