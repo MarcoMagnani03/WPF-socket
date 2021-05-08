@@ -32,6 +32,7 @@ namespace APP_WPF_socket
         static private string nomeUtente;
         static private int nVittorieUtente;
         static private int nVittorieAvversario;
+        static private int contatore;
         public MainWindow()
         {
             InitializeComponent();
@@ -89,10 +90,10 @@ namespace APP_WPF_socket
                 MessageBox.Show("La porta inserita non è valida");
                 btnGioca.IsEnabled = false;
             }
-            if (txtUsername.Text.Trim() == "")
+            if (txtUsername.Text.Trim() == "" || txtUsername.Text.Length>15)
             {
                 btnGioca.IsEnabled = false;
-                MessageBox.Show("Non è stato inserito lo username");
+                MessageBox.Show("Lo username inserito non è valido\nDeve essere di almeno 1 carattere e massimo 15.");
             }
             if (btnGioca.IsEnabled)
             {
@@ -154,15 +155,15 @@ namespace APP_WPF_socket
             Byte[] byteInviati = Encoding.ASCII.GetBytes(messaggio);
             Socket s = new Socket(dest.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
             ControlloVittoria();
-            int i = 0;
+            
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (i != 0)
+                if (contatore != 0)
                 {
                     lblVittoria.Content = "Attendi la giocata dell'avversario...";
                     lblVittoria.Visibility = Visibility.Visible;
                 }
-                i++;
+                contatore++;
             }));
             //Andiamo a creare il socket del destinatario
             IPEndPoint remote_endpoint = new IPEndPoint(dest, destport);
