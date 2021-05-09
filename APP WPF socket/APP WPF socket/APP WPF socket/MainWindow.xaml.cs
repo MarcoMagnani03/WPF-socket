@@ -155,16 +155,16 @@ namespace APP_WPF_socket
             Byte[] byteInviati = Encoding.ASCII.GetBytes(messaggio);
             Socket s = new Socket(dest.AddressFamily,SocketType.Dgram,ProtocolType.Udp);
             ControlloVittoria();
-            
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (contatore != 0)
+                if (contatore != 0 && lblVittoria.Content.ToString()=="")
                 {
                     lblVittoria.Content = "Attendi la giocata dell'avversario...";
                     lblVittoria.Visibility = Visibility.Visible;
                 }
                 contatore++;
             }));
+            
             //Andiamo a creare il socket del destinatario
             IPEndPoint remote_endpoint = new IPEndPoint(dest, destport);
             s.SendTo(byteInviati, remote_endpoint);

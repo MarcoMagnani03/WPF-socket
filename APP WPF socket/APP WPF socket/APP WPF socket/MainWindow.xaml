@@ -14,16 +14,16 @@
         <Label FontSize="15" FontWeight="Bold" Name="lblPorta" Content="Porta" HorizontalAlignment="Left" Margin="290,37,0,0" VerticalAlignment="Top" />
         <Button Name="btnGioca" IsEnabled="False" Content="Gioca a morra cinese" HorizontalAlignment="Left" Background="LightYellow" FontSize="20" FontWeight="Bold" Margin="230,161,0,0" VerticalAlignment="Top" Width="209" Height="42" Click="btnGioca_Click" RenderTransformOrigin="0.514,0.525"/>
 
-        <Button Name="btnsasso" Background="Transparent" HorizontalAlignment="Left" Margin="84,100,0,31.2"  Height="100" Width="70" Click="Button_Click"  Visibility="Hidden">
+        <Button Name="btnsasso" Background="Transparent" HorizontalAlignment="Left" Margin="84,100,0,31.2"  Height="100" Width="70" Click="Button_Click" IsEnabled="False" Visibility="Hidden">
             <Image  x:Name="imgSasso" Source="immagini\sasso.png"  Stretch="Uniform" />
         </Button>
 
-        <Button Name="btncarta" Background="Transparent" Margin="265,100,281.8,31.2" HorizontalAlignment="Center" Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
+        <Button Name="btncarta" Background="Transparent" Margin="265,100,281.8,31.2" HorizontalAlignment="Center" Height="100" Width="70" IsEnabled="False" Click="Button_Click" Visibility="Hidden">
             <Image x:Name="imgCarta" Source="immagini\carta.png" Stretch="Uniform"/>
         </Button>
 
 
-        <Button Name="btnforbici" Background="Transparent" Margin="0,100,102.8,31.2" HorizontalAlignment="Right" Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
+        <Button Name="btnforbici" Background="Transparent" Margin="0,100,102.8,31.2" IsEnabled="False" HorizontalAlignment="Right" Height="100" Width="70" Click="Button_Click" Visibility="Hidden">
             <Image x:Name="imgForbici" Source="immagini\forbici.png" Stretch="Uniform"/>
         </Button>
 
