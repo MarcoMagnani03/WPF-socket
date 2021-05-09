@@ -161,6 +161,7 @@ namespace APP_WPF_socket
                 {
                     lblVittoria.Content = "Attendi la giocata dell'avversario...";
                     lblVittoria.Visibility = Visibility.Visible;
+                    lblVittoria.Foreground = Brushes.Black;
                 }
                 contatore++;
             }));
@@ -372,6 +373,7 @@ namespace APP_WPF_socket
             btncarta.IsEnabled = true;
             btnforbici.IsEnabled = true;
             btnsasso.IsEnabled = true;
+            BordoUsername.Visibility = Visibility.Visible;
         }
     }
 }
